@@ -111,7 +111,9 @@
 		annotation.subtitle = @"subtitle";
 		[mapView_ addAnnotation:annotation];
 		[mapView_ selectAnnotation:annotation animated:YES];
-		[annotation release];		
+		[annotation release];
+		
+		NSLog(@"update");
 	} errorBlock:^(NSError *error){
 		NSLog(@"%@",error);
 	}];

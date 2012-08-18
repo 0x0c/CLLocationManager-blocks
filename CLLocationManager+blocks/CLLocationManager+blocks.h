@@ -7,6 +7,7 @@
 //
 
 #import <CoreLocation/CoreLocation.h>
+#import <objc/runtime.h>
 
 @interface CLLocationManagerBlocks : NSObject <CLLocationManagerDelegate>
 {
@@ -20,6 +21,8 @@
 @end
 
 @interface CLLocationManager (Blocks)
+
+@property (nonatomic, retain) id delegate_;
 
 - (id)initWithUpdateBlock:(void (^)(CLLocationManager *manager, CLLocation *newLocation, CLLocation *oldLocation, BOOL *stop))updateBlock errorBlock:(void (^)(NSError *error))errorBlock;
 

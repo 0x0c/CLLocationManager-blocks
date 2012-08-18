@@ -29,8 +29,6 @@
 	}
 	if (stop) {
 		[manager stopUpdatingLocation];
-		manager.delegate = nil;
-		[self release];
 	}
 }
 
@@ -80,6 +78,7 @@
 {
 	Block_release(updateBlock_);
 	Block_release(errorBlock_);
+	
 	[super dealloc];
 }
 
@@ -87,24 +86,23 @@
 
 @implementation CLLocationManager (Blocks)
 
+@dynamic delegate_;
+
+- (void)setDelegate_:(id)delegate_
+{
+	objc_setAssociatedObject(self, @"CLLocationManagerBlocks", delegate_, OBJC_ASSOCIATION_RETAIN);
+}
+
 - (id)initWithUpdateBlock:(void (^)(CLLocationManager *manager, CLLocation *newLocation, CLLocation *oldLocation, BOOL *stop))updateBlock errorBlock:(void (^)(NSError *error))errorBlock
 {
 	self = [self init];
 	if (self) {
-		CLLocationManagerBlocks *delegate = [[CLLocationManagerBlocks alloc] initWithUpdateBlock:updateBlock errorBlock:errorBlock];
-		self.delegate = (id)delegate;
+		CLLocationManagerBlocks *blocksDelegate = [[CLLocationManagerBlocks alloc] initWithUpdateBlock:updateBlock errorBlock:errorBlock];
+		self.delegate_ = blocksDelegate;
+		[blocksDelegate release];
 	}
 	
 	return self;
 }
-
-//- (id)initWithUpdateBlock:(void (^)(CLLocationManager *manager, CLHeading *newHeading, BOOL *stop))updateBlock errorBlock:(void (^)(NSError *error))errorBlock showHeadingCalibration:(BOOL)showHeadingCalibration
-//{
-//	self = [self init];
-//	if (self) {
-//		CLLocationManagerBlocks *delegate = [[CLLocationManagerBlocks alloc] initWithUpdateBlock:updateBlock errorBlock:errorBlock];
-//		self.delegate = (id)delegate;
-//	}
-//}
 
 @end
